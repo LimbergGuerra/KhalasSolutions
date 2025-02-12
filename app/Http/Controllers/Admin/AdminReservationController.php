@@ -9,24 +9,28 @@ use Illuminate\Http\Request;
 class AdminReservationController extends Controller
 {
     /**
-     * Actualizar el estado de una reserva.
+     * Muestra la lista de reservas en el panel de administración.
+     */
+    public function index()
+    {
+        $reservations = Reservation::all();
+        return view('admin.reservations.index', compact('reservations'));
+    }
+
+    /**
+     * Actualizar el estado de una reserva desde un formulario.
      */
     public function update(Request $request, Reservation $reservation)
     {
-        // Validar que el estado sea correcto
+        // Validar que el estado sea un valor permitido
         $request->validate([
-            'status' => 'required|in:pending,in_process,confirmed,cancelled',
+            'status' => 'required|string|in:pending,in_process,confirmed,closed,cancelled',
         ]);
 
-        // No permitir cambios si la reserva ya está cerrada
-        if ($reservation->status === 'closed') {
-            return redirect()->route('admin.dashboard')->with('error', 'No puedes modificar una reserva cerrada.');
-        }
+        // Convertir el estado a minúsculas antes de guardarlo
+        $reservation->update(['status' => strtolower($request->input('status'))]);
 
-        // Actualizar el estado
-        $reservation->update(['status' => $request->status]);
-
-        return redirect()->route('admin.dashboard')->with('success', 'Reserva actualizada correctamente.');
+        return redirect()->back()->with('success', 'Reserva actualizada correctamente.');
     }
 
     /**
@@ -35,28 +39,22 @@ class AdminReservationController extends Controller
     public function destroy(Reservation $reservation)
     {
         $reservation->delete();
-        return redirect()->route('admin.dashboard')->with('success', 'Reserva eliminada correctamente.');
+        return redirect()->back()->with('success', 'Reserva eliminada correctamente.');
     }
 
     /**
-     * Cambiar el estado de una reserva automáticamente.
+     * Cambiar automáticamente el estado de una reserva.
      */
-    public function updateStatus(Reservation $reservation)
+    public function updateStatus(Request $request, Reservation $reservation)
     {
-        // Definir el flujo de estados válidos
-        $statusFlow = [
-            'pending' => 'in_process',
-            'in_process' => 'confirmed',
-            'confirmed' => 'closed',
-            'closed' => 'closed', // Una vez cerrado, no puede cambiar más
-        ];
+        // Validar el estado
+        $request->validate([
+            'status' => 'required|string|in:pending,in_process,confirmed,closed,cancelled',
+        ]);
 
-        // Obtener el próximo estado
-        $nextStatus = $statusFlow[$reservation->status] ?? 'pending';
+        // Actualizar el estado de la reserva
+        $reservation->update(['status' => strtolower($request->input('status'))]);
 
-        // Actualizar el estado
-        $reservation->update(['status' => $nextStatus]);
-
-        return redirect()->route('admin.dashboard')->with('success', 'Estado de la reserva actualizado.');
+        return redirect()->back()->with('success', 'Estado de la reserva actualizado.');
     }
 }
