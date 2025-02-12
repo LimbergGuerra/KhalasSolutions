@@ -44,23 +44,24 @@
     <!-- LAYOUT PRINCIPAL -->
     <div class="flex">
         <!-- BARRA LATERAL -->
-        <aside class="w-64 bg-gray-900 text-white min-h-screen p-6">
-            <h2 class="text-xl font-bold mb-4">Menú de Administración</h2>
-            <nav>
-                <a href="{{ route('admin.dashboard') }}" 
-                   class="flex items-center px-4 py-3 mb-2 bg-gray-800 rounded hover:bg-gray-700">
-                    📊 Dashboard
-                </a>
-                <a href="{{ route('admin.users.index') }}" 
-                   class="flex items-center px-4 py-3 mb-2 bg-gray-800 rounded hover:bg-gray-700">
-                    👥 Gestión de Usuarios
-                </a>
-                <a href="{{ route('admin.reservations.index') }}" 
-                   class="flex items-center px-4 py-3 bg-gray-800 rounded hover:bg-gray-700">
-                    📅 Gestión de Reservas
-                </a>
-            </nav>
-        </aside>
+        <aside class="w-48 bg-gray-900 text-white min-h-screen p-4">
+    <h2 class="text-lg font-bold mb-4 text-center">MENU</h2>
+    <nav>
+        <a href="{{ route('admin.dashboard') }}" 
+           class="flex items-center px-3 py-3 mb-2 bg-gray-800 rounded hover:bg-gray-700">
+            📊 Dashboard
+        </a>
+        <a href="{{ route('admin.users.index') }}" 
+           class="flex items-center px-3 py-3 mb-2 bg-gray-800 rounded hover:bg-gray-700">
+            👥 Usuarios
+        </a>
+        <a href="{{ route('admin.reservations.index') }}" 
+           class="flex items-center px-3 py-3 bg-gray-800 rounded hover:bg-gray-700">
+            📅 Reservas
+        </a>
+    </nav>
+</aside>
+
 
         <!-- CONTENIDO PRINCIPAL -->
         <main class="flex-1 p-10">
@@ -93,4 +94,3 @@
 
 </body>
 </html>
-
