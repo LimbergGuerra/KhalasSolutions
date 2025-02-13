@@ -48,8 +48,17 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-    // ✅ Gestión de usuarios
-    Route::resource('users', UserController::class);
+    // ✅ Gestión de usuarios (redirige a "auth.register" para crear nuevos usuarios)
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/create', function () {
+        return view('auth.register');
+    })->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+
+    // ✅ Rutas para editar, actualizar y eliminar usuarios
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit'); // Editar usuario
+    Route::patch('/users/{user}', [UserController::class, 'update'])->name('users.update'); // Actualizar usuario
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy'); // Eliminar usuario
 
     // ✅ Gestión de reservas
     Route::resource('reservations', AdminReservationController::class);
@@ -74,7 +83,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 |--------------------------------------------------------------------------
 */
 Route::get('/redirect-after-login', function () {
-    return auth()->user()->is_admin
+    return auth()->user()->role === 'admin'
         ? redirect()->route('admin.dashboard')
         : redirect()->route('home');
 })->middleware('auth')->name('redirect.after.login');

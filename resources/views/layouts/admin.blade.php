@@ -10,10 +10,10 @@
 
     <!-- NAVBAR SUPERIOR -->
     <nav class="bg-gray-900 p-4 flex justify-between items-center">
-        <!-- LOGO -->
-        <div class="flex items-center space-x-3">
+        <!-- CENTRAR LOGO Y TEXTO -->
+        <div class="flex items-center justify-center w-full space-x-3">
             <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-8">
-            <span class="text-white font-bold text-xl">Khalas Solutions - Admin</span>
+            <span class="text-white font-bold text-xl">Khalas Solutions</span>
         </div>
 
         <!-- MENÚ DE USUARIO -->
@@ -30,7 +30,8 @@
 
             <!-- Menú desplegable -->
             <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg hidden">
-                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Perfil</a>
+                <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Perfil</a>
+                <a href="{{ route('admin.users.create') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">➕ Crear Usuario</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-200">
@@ -45,23 +46,22 @@
     <div class="flex">
         <!-- BARRA LATERAL -->
         <aside class="w-48 bg-gray-900 text-white min-h-screen p-4">
-    <h2 class="text-lg font-bold mb-4 text-center">MENU</h2>
-    <nav>
-        <a href="{{ route('admin.dashboard') }}" 
-           class="flex items-center px-3 py-3 mb-2 bg-gray-800 rounded hover:bg-gray-700">
-            📊 Dashboard
-        </a>
-        <a href="{{ route('admin.users.index') }}" 
-           class="flex items-center px-3 py-3 mb-2 bg-gray-800 rounded hover:bg-gray-700">
-            👥 Usuarios
-        </a>
-        <a href="{{ route('admin.reservations.index') }}" 
-           class="flex items-center px-3 py-3 bg-gray-800 rounded hover:bg-gray-700">
-            📅 Reservas
-        </a>
-    </nav>
-</aside>
-
+            <h2 class="text-lg font-bold mb-4 text-center">MENU</h2>
+            <nav>
+                <a href="{{ route('admin.dashboard') }}" 
+                   class="flex items-center px-3 py-3 mb-2 bg-gray-800 rounded hover:bg-gray-700">
+                    📊 Dashboard
+                </a>
+                <a href="{{ route('admin.users.index') }}" 
+                   class="flex items-center px-3 py-3 mb-2 bg-gray-800 rounded hover:bg-gray-700">
+                    👥 Usuarios
+                </a>
+                <a href="{{ route('admin.reservations.index') }}" 
+                   class="flex items-center px-3 py-3 bg-gray-800 rounded hover:bg-gray-700">
+                    📅 Reservas
+                </a>
+            </nav>
+        </aside>
 
         <!-- CONTENIDO PRINCIPAL -->
         <main class="flex-1 p-10">

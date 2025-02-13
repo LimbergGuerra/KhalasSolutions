@@ -15,11 +15,21 @@
 <div class="container mx-auto px-4 py-8 bg-white bg-opacity-80 rounded-lg shadow-lg">
     <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Panel de Administración</h1>
 
-    <!-- FILTRO DE BÚSQUEDA -->
-    <div class="mb-4 flex justify-center">
+    <!-- FILTROS -->
+    <div class="mb-4 flex flex-wrap justify-between items-center">
+        <!-- FILTRO DE BÚSQUEDA -->
         <input type="text" id="searchInput" placeholder="Buscar reserva..." 
             class="px-4 py-2 border rounded-lg w-full max-w-lg shadow-md"
             onkeyup="filterTable()">
+
+        <!-- FILTRO POR ESTADO -->
+        <select id="statusFilter" class="px-4 py-2 border rounded-lg shadow-md ml-4" onchange="filterTable()">
+            <option value="all">Todos</option>
+            <option value="pending">Pendientes</option>
+            <option value="in_process">En Proceso</option>
+            <option value="confirmed">Confirmados</option>
+            <option value="cancelled">Cancelados</option>
+        </select>
     </div>
 
     <!-- TABLA DE RESERVAS -->
@@ -48,7 +58,7 @@
                         <td class="px-4 py-2">{{ ucfirst($reservation->service) }}</td>
                         <td class="px-4 py-2">{{ $reservation->phone_code }} {{ $reservation->phone }}</td>
                         <td class="px-4 py-2">{{ \Carbon\Carbon::parse($reservation->reservation_date)->format('d/m/Y') }}</td>
-                        <td class="px-4 py-2">
+                        <td class="px-4 py-2 status-column" data-status="{{ strtolower($reservation->status) }}">
                             <span class="px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap
                                 @if ($reservation->status == 'pending') bg-yellow-500 text-black
                                 @elseif ($reservation->status == 'in_process') bg-blue-500 text-white
@@ -94,16 +104,24 @@
     </div>
 </div>
 
+<!-- Script para Filtrar en la Tabla -->
 <script>
     function filterTable() {
-        let input = document.getElementById("searchInput").value.toLowerCase();
+        let searchInput = document.getElementById("searchInput").value.toLowerCase();
+        let statusFilter = document.getElementById("statusFilter").value;
         let table = document.getElementById("reservationsTable");
         let rows = table.getElementsByTagName("tr");
 
         for (let i = 1; i < rows.length; i++) {
             let row = rows[i];
             let text = row.innerText.toLowerCase();
-            row.style.display = text.includes(input) ? "" : "none";
+            let statusCell = row.querySelector(".status-column"); // Busca la celda de estado
+            let status = statusCell ? statusCell.getAttribute("data-status") : "";
+
+            let matchesSearch = text.includes(searchInput);
+            let matchesStatus = statusFilter === "all" || status === statusFilter;
+
+            row.style.display = matchesSearch && matchesStatus ? "" : "none";
         }
     }
 </script>
