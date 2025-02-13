@@ -4,25 +4,30 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
-use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        // Permitir filtrar por estado (opcional)
-        $statusFilter = $request->query('status');
+        // Obtener estadísticas de reservas
+        $totalReservations = Reservation::count();
+        $pending = Reservation::where('status', 'pending')->count();
+        $inProcess = Reservation::where('status', 'in_process')->count();
+        $confirmed = Reservation::where('status', 'confirmed')->count();
+        $cancelled = Reservation::where('status', 'cancelled')->count();
 
-        // Obtener reservas con filtro de estado si está presente
-        $reservationsQuery = Reservation::latest();
+        // Obtener solo las reservas pendientes para mostrarlas en la tabla
+        $pendingReservations = Reservation::where('status', 'pending')
+            ->orderBy('reservation_date', 'asc')
+            ->get();
 
-        if ($statusFilter) {
-            $reservationsQuery->where('status', $statusFilter);
-        }
-
-        // Paginación y carga de relaciones si existen (Ej: usuario)
-        $reservations = $reservationsQuery->paginate(10);
-
-        return view('admin.dashboard', compact('reservations'));
+        return view('admin.dashboard', compact(
+            'totalReservations',
+            'pending',
+            'inProcess',
+            'confirmed',
+            'cancelled',
+            'pendingReservations'
+        ));
     }
 }

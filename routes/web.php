@@ -23,6 +23,7 @@ Route::get('/services', [ServiceController::class, 'index'])->name('services.ind
 
 // ✅ Reservas accesibles sin autenticación
 Route::prefix('reservations')->name('reservations.')->group(function () {
+    Route::get('/', [ReservationController::class, 'index'])->name('index'); // ✅ Agregamos esta línea
     Route::get('/create', [ReservationController::class, 'create'])->name('create');
     Route::post('/', [ReservationController::class, 'store'])->name('store');
 });
@@ -48,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-    // ✅ Gestión de usuarios (redirige a "auth.register" para crear nuevos usuarios)
+    // ✅ Gestión de usuarios
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', function () {
         return view('auth.register');
@@ -56,14 +57,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
 
     // ✅ Rutas para editar, actualizar y eliminar usuarios
-    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit'); // Editar usuario
-    Route::patch('/users/{user}', [UserController::class, 'update'])->name('users.update'); // Actualizar usuario
-    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy'); // Eliminar usuario
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::patch('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
     // ✅ Gestión de reservas
     Route::resource('reservations', AdminReservationController::class);
 
-    // ✅ Actualización del estado de reservas (POST o PATCH)
+    // ✅ Actualización del estado de reservas
     Route::match(['post', 'patch'], '/reservations/{reservation}/update-status', 
         [AdminReservationController::class, 'updateStatus'])->name('reservations.updateStatus');
 });

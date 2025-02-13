@@ -17,9 +17,12 @@
 
     <!-- Botón para registrar un nuevo usuario -->
     <div class="mb-4">
-        <a href="{{ route('admin.users.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded-md">
-            Crear Usuario
-        </a>
+    @if(Auth::user()->role === 'admin')
+    <a href="{{ route('admin.users.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded-lg">
+        ➕ Crear Usuario
+    </a>
+@endif
+
     </div>
 
     <!-- Tabla de usuarios -->
@@ -42,15 +45,33 @@
                         <td class="px-4 py-2">{{ $user->email }}</td>
                         <td class="px-4 py-2">{{ ucfirst($user->role) }}</td>
                         <td class="px-4 py-2">
-                            <a href="{{ route('admin.users.edit', $user) }}" class="bg-green-500 text-white px-3 py-1 rounded-md">Editar</a>
-                            <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline-block">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-md"
-                                    onclick="return confirm('¿Estás seguro de eliminar este usuario?')">
-                                    Eliminar
-                                </button>
-                            </form>
+                        @if(auth()->user()->role === 'admin')
+    <!-- ✅ Botón habilitado solo para admin -->
+    <a href="{{ route('admin.users.edit', $user) }}" class="bg-green-500 text-white px-3 py-1 rounded-md">Editar</a>
+@else
+    <!-- ❌ Botón deshabilitado para users -->
+    <a href="#" class="bg-green-300 text-white px-3 py-1 rounded-md opacity-50 cursor-not-allowed" onclick="return false;">
+        Editar
+    </a>
+@endif
+
+    @csrf
+    @method('DELETE')
+
+    @if(auth()->user()->role === 'admin')
+        <!-- ✅ Botón habilitado solo para admin -->
+        <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-md"
+            onclick="return confirm('¿Estás seguro de eliminar este usuario?')">
+            Eliminar
+        </button>
+    @else
+        <!-- ❌ Botón deshabilitado para users -->
+        <button type="button" class="bg-red-300 text-white px-3 py-1 rounded-md opacity-50 cursor-not-allowed" disabled>
+            Eliminar
+        </button>
+    @endif
+</form>
+
                         </td>
                     </tr>
                 @endforeach

@@ -31,7 +31,12 @@
             <!-- Menú desplegable -->
             <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg hidden">
                 <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Perfil</a>
-                <a href="{{ route('admin.users.create') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">➕ Crear Usuario</a>
+                @if(Auth::user()->role === 'admin')
+    <a href="{{ route('admin.users.create') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
+        ➕ Crear Usuario
+    </a>
+@endif
+
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-200">
@@ -56,10 +61,10 @@
                    class="flex items-center px-3 py-3 mb-2 bg-gray-800 rounded hover:bg-gray-700">
                     👥 Usuarios
                 </a>
-                <a href="{{ route('admin.reservations.index') }}" 
-                   class="flex items-center px-3 py-3 bg-gray-800 rounded hover:bg-gray-700">
-                    📅 Reservas
-                </a>
+                <a href="{{ route('reservations.index') }}" class="flex items-center px-3 py-3 bg-gray-800 rounded hover:bg-gray-700">
+    📅 Reservas
+</a>
+
             </nav>
         </aside>
 
