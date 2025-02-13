@@ -43,7 +43,7 @@ class ReservationController extends Controller
         // Crear una nueva reserva
         Reservation::create($request->all());
 
-        // Redirigir a la lista de reservas con un mensaje de éxito
-        return redirect()->route('reservations.index')->with('success', 'Reserva creada exitosamente.');
+        // ✅ Redirigir a home con un mensaje de éxito
+        return redirect()->route('home')->with('success', 'Reserva creada exitosamente.');
     }
 }
